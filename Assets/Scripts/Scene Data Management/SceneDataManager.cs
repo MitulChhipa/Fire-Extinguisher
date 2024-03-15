@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class SceneDataManager : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class SceneDataManager : MonoBehaviour
     public Action onSceneObjectPresent;
     public Action onWallNull;
     public Action onSceneObjectNull;
+    public UnityEvent onSceneAnchorLoaded;
 
     private void Awake()
     {
@@ -46,6 +48,7 @@ public class SceneDataManager : MonoBehaviour
         //}
 
         _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
+        _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
         CheckForWall();
         CheckForSceneObjects();
     }
@@ -109,5 +112,10 @@ public class SceneDataManager : MonoBehaviour
     public void LoadSceneModels()
     {
         _sceneManager.LoadSceneModel();
+    }
+
+    private void OnSceneAnchorLoaded()
+    {
+        onSceneAnchorLoaded?.Invoke();
     }
 }

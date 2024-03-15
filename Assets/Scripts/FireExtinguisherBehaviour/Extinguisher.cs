@@ -8,28 +8,24 @@ namespace FireExtinguisher
     public class Extinguisher : MonoBehaviour
     {
         private GrabInteractable _grabInteractable;
-        private DistanceGrabInteractable _distanceGrabInteractable;
         private HandGrabInteractable _handGrabInteractable;
-        private DistanceHandGrabInteractable _distanceHandGrabInteractable;
 
         [SerializeField] private Transform _interactableTransform;
 
         public bool isExtinguishing;
 
-        private void Start()
-        {
-            _grabInteractable = _interactableTransform.GetComponent<GrabInteractable>();
-            _distanceGrabInteractable = _interactableTransform.GetComponent<DistanceGrabInteractable>();
-            _handGrabInteractable = _interactableTransform.GetComponent<HandGrabInteractable>();
-            _distanceHandGrabInteractable = _interactableTransform.GetComponent<DistanceHandGrabInteractable>();
+        [SerializeField] private ParticleSystem _particle;
+        [SerializeField] private float _emissionTime;
+
+        //private void Start()
+        //{
+        //    _grabInteractable = _interactableTransform.GetComponent<GrabInteractable>();
+        //    _handGrabInteractable = _interactableTransform.GetComponent<HandGrabInteractable>();
 
 
-            _grabInteractable.WhenPointerEventRaised += GrabEvent;
-            _distanceGrabInteractable.WhenPointerEventRaised += GrabEvent;
-            _handGrabInteractable.WhenPointerEventRaised += GrabEvent;
-            _distanceHandGrabInteractable.WhenPointerEventRaised += GrabEvent;
-        }
-
+        //    _grabInteractable.WhenPointerEventRaised += GrabEvent;
+        //    _handGrabInteractable.WhenPointerEventRaised += GrabEvent;
+        //}
 
         private void GrabEvent(PointerEvent pointerEvent)
         {
@@ -52,13 +48,20 @@ namespace FireExtinguisher
             }
         }
 
-        private void StartExtinguisher()
+        public void StartExtinguisher()
         {
             isExtinguishing = true;
+            InvokeRepeating("EmitParticles", _emissionTime, _emissionTime);
         }
-        private void StopExtinguisher()
+        public void StopExtinguisher()
         {
             isExtinguishing = false;
+            CancelInvoke("EmitParticles");
+        }
+
+        private void EmitParticles()
+        {
+            _particle.Emit(1);
         }
     }
 }
