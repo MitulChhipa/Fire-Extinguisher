@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class FireManager : MonoBehaviour
@@ -12,10 +8,14 @@ public class FireManager : MonoBehaviour
     [SerializeField] private List<FirePointGenerator> _firePointGenerators = new List<FirePointGenerator>();
     private List<FirePoint> _firePoints = new List<FirePoint>();
 
+    private List<FirePoint> _litPoints = new List<FirePoint>();
+
     [SerializeField] private GameObject _firePrefab;
     [SerializeField] private GameObject _firePoint;
 
     public int _totalFlamableObjectTypes;
+
+    public int _count;
 
     public void CacheSceneObjects()
     {
@@ -52,12 +52,23 @@ public class FireManager : MonoBehaviour
             _firePointGenerators.Add(firePointGenerator);
         }
 
-        foreach(FirePointGenerator firePointGenerator in _firePointGenerators)
+        foreach (FirePointGenerator firePointGenerator in _firePointGenerators)
         {
-           firePointGenerator.PlacePoints(_firePoint,ref _firePoints);
+            firePointGenerator.PlacePoints(_firePoint, ref _firePoints);
         }
+
+        InvokeRepeating("SetFireToPoints", 1, 1);
     }
 
+    private void SetFireToPoints()
+    {
+        int index = Random.Range(0, _firePoints.Count);
+        _firePoints[Random.Range(0, _firePoints.Count)].SetFire(_firePrefab);
+
+        _litPoints.Add(_firePoints[index]);
+        _firePoints.Remove(_firePoints[index]);
+        _count++;
+    }
 }
 
 public enum InflamableObjects

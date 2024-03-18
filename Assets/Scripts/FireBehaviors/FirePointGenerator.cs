@@ -14,8 +14,6 @@ public class FirePointGenerator : MonoBehaviour
     public int gridSizeZ;
     public int gridSizeY;
 
-    bool partPlaced;
-
 
     public void PlacePoints(GameObject pointObject,ref List<FirePoint> firePoints)
     {
@@ -43,7 +41,5 @@ public class FirePointGenerator : MonoBehaviour
             }
             position.x += cellSize.x;
         }
-        partPlaced = true;
-
     }
 }
