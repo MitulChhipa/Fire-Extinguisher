@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 namespace FireExtinguisher
 {
-    public class TwoGrabTransformer : MonoBehaviour, ITransformer
+    public class TwoGrabTransformer : MonoBehaviour, ITransformer, IInteractionToggle
     {
 
         [SerializeField] private UnityEvent OnTargetInteracted;
@@ -18,8 +18,8 @@ namespace FireExtinguisher
 
         private Quaternion _activeRotation;
         private float _initialDistance;
-       // private float _initialScale = 1.0f;
-        //private float _activeScale = 1.0f;
+
+        private bool _canMove;
 
         private Pose _previousGrabPointA;
         private Pose _previousGrabPointB;
@@ -82,6 +82,7 @@ namespace FireExtinguisher
 
         public void UpdateTransform()
         {
+
             var grabA = _grabbable.GrabPoints[0];
             var grabB = _grabbable.GrabPoints[1];
             var targetTransform = _grabbable.Transform;
@@ -133,9 +134,11 @@ namespace FireExtinguisher
 
             Quaternion rotationInTargetSpace = Quaternion.Inverse(initialRotation) * targetTransform.rotation;
 
-            targetTransform.position = (targetRotation * (offsetInTargetSpace)) + targetCenter;
-            targetTransform.rotation = targetRotation * rotationInTargetSpace;
-
+            if (_canMove)
+            {
+                targetTransform.position = (targetRotation * (offsetInTargetSpace)) + targetCenter;
+                targetTransform.rotation = targetRotation * rotationInTargetSpace;
+            }
             _previousGrabPointA = new Pose(grabA.position, grabA.rotation);
             _previousGrabPointB = new Pose(grabB.position, grabB.rotation);
         }
@@ -148,6 +151,16 @@ namespace FireExtinguisher
                 OnTargetInteractionCompleted?.Invoke();
             }
         }
+        public void EnableInteractionMovement()
+        {
+            _canMove = true;
+        }
+
+        public void DisableInteractionMovement()
+        {
+            _canMove = false;
+        }
+
 
         #region Inject
 

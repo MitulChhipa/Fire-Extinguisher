@@ -7,17 +7,13 @@ using UnityEngine.Events;
 public class SceneDataManager : MonoBehaviour
 {
     [SerializeField] private OVRSceneManager _sceneManager;
-    [SerializeField] private GameObject _setUpRequired;
-    [SerializeField] private GameObject _setUpDone;
-    [SerializeField] private TextMeshProUGUI _textDescription;
     public Action onSceneDataRecieved;
     public bool wallPresent;
     public bool sceneObjectPresent;
 
     public static SceneDataManager instance;
 
-    public IEnumerable<string>[] _sceneObjects = { new[] { "WALL_FACE" },
-                                                   new[] { "DESK" },
+    private IEnumerable<string>[] _sceneObjects = { new[] { "DESK" },
                                                    new[] { "COUCH" },
                                                    new[] { "OTHER" },
                                                    new[] { "STORAGE" },
@@ -28,6 +24,7 @@ public class SceneDataManager : MonoBehaviour
                                                    new[] { "TABLE" },
                                                    new[] { "WALL_ART" }};
 
+    private IEnumerable<string> _wallObjects = new[] { "WALL_FACE" };
 
     public Action onWallPresent;
     public Action onSceneObjectPresent;
@@ -40,12 +37,7 @@ public class SceneDataManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
-        //else if (instance != this)
-        //{
-        //    DestroyImmediate(gameObject);
-        //}
 
         _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
         _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
@@ -65,14 +57,14 @@ public class SceneDataManager : MonoBehaviour
 
     public void CheckForWall()
     {
-        foreach(IEnumerable<string> sceneObject in _sceneObjects)
-        {
-            _sceneManager.DoesRoomSetupExist(sceneObject).ContinueWith(PostSceneObjectsCheck);
-        }
+        _sceneManager.DoesRoomSetupExist(_wallObjects).ContinueWith(PostWallCheck); 
     }
     public void CheckForSceneObjects()
     {
-        //_sceneManager.DoesRoomSetupExist(_sceneObjectData).ContinueWith(PostSceneObjectsCheck);
+        foreach (IEnumerable<string> sceneObject in _sceneObjects)
+        {
+            _sceneManager.DoesRoomSetupExist(sceneObject).ContinueWith(PostSceneObjectsCheck);
+        }
     }
 
     private void PostWallCheck(bool wallPresent)
@@ -90,15 +82,17 @@ public class SceneDataManager : MonoBehaviour
     }
     private void PostSceneObjectsCheck(bool sceneObjectPresent)
     {
-        this.sceneObjectPresent = sceneObjectPresent;
-
-        if (sceneObjectPresent)
+        if (!this.sceneObjectPresent)
         {
-            onSceneObjectPresent?.Invoke();
-        }
-        else
-        {
-            onSceneObjectNull?.Invoke();
+            this.sceneObjectPresent = sceneObjectPresent;
+            if (sceneObjectPresent)
+            {
+                onSceneObjectPresent?.Invoke();
+            }
+            else
+            {
+                onSceneObjectNull?.Invoke();
+            }
         }
     }
 
