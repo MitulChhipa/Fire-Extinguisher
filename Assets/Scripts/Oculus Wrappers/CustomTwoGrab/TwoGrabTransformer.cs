@@ -19,8 +19,6 @@ namespace FireExtinguisher
         private Quaternion _activeRotation;
         private float _initialDistance;
 
-        private bool _canMove;
-
         private Pose _previousGrabPointA;
         private Pose _previousGrabPointB;
 
@@ -123,7 +121,7 @@ namespace FireExtinguisher
 
             float scalePercentage = activeDistance / _initialDistance;
 
-            
+
 
 
             // Apply the positional delta initialCenter -> targetCenter and the
@@ -134,11 +132,8 @@ namespace FireExtinguisher
 
             Quaternion rotationInTargetSpace = Quaternion.Inverse(initialRotation) * targetTransform.rotation;
 
-            if (_canMove)
-            {
-                targetTransform.position = (targetRotation * (offsetInTargetSpace)) + targetCenter;
-                targetTransform.rotation = targetRotation * rotationInTargetSpace;
-            }
+            targetTransform.position = (targetRotation * (offsetInTargetSpace)) + targetCenter;
+            targetTransform.rotation = targetRotation * rotationInTargetSpace;
             _previousGrabPointA = new Pose(grabA.position, grabA.rotation);
             _previousGrabPointB = new Pose(grabB.position, grabB.rotation);
         }
@@ -153,12 +148,10 @@ namespace FireExtinguisher
         }
         public void EnableInteractionMovement()
         {
-            _canMove = true;
         }
 
         public void DisableInteractionMovement()
         {
-            _canMove = false;
         }
 
 
