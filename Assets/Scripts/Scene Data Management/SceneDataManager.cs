@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.Events;
+using System.Threading.Tasks;
 
 public class SceneDataManager : MonoBehaviour
 {
@@ -26,10 +26,8 @@ public class SceneDataManager : MonoBehaviour
 
     private IEnumerable<string> _wallObjects = new[] { "WALL_FACE" };
 
-    public Action onWallPresent;
-    public Action onSceneObjectPresent;
-    public Action onWallNull;
-    public Action onSceneObjectNull;
+    public UnityEvent onFlamableObjectPresent;
+    public UnityEvent onFlamableObjectNotPresent;
     public UnityEvent onSceneAnchorLoaded;
 
     private void Awake()
@@ -41,62 +39,50 @@ public class SceneDataManager : MonoBehaviour
 
         _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
         _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
-        CheckForWall();
-        CheckForSceneObjects();
+
+        CheckForFlamables();
     }
 
     private void SceneCaptured()
     {
         GameData.sceneRequested = true;
 
-        if (!wallPresent)
+        CheckForFlamables();
+    }
+
+    public async Task<int> CheckForSceneObjectsAsync()
+    {
+        int ObjectsPresent = 0;
+
+        for (int i = 0; i < _sceneObjects.Length; i++)
         {
-            CheckForWall();
+            bool result = await _sceneManager.DoesRoomSetupExist(_sceneObjects[i]);
+            if (result)
+            {
+                ObjectsPresent++;
+            }
         }
+
+        return ObjectsPresent;
     }
 
-    public void CheckForWall()
+
+
+
+    private async Task CheckForFlamables()
     {
-        _sceneManager.DoesRoomSetupExist(_wallObjects).ContinueWith(PostWallCheck); 
-    }
-    public void CheckForSceneObjects()
-    {
-        foreach (IEnumerable<string> sceneObject in _sceneObjects)
+        int result = await CheckForSceneObjectsAsync();
+
+        if (result > 0)
         {
-            _sceneManager.DoesRoomSetupExist(sceneObject).ContinueWith(PostSceneObjectsCheck);
-        }
-    }
-
-    private void PostWallCheck(bool wallPresent)
-    {
-        this.wallPresent = wallPresent;
-
-        if (wallPresent)
-        {
-            onWallPresent?.Invoke();
+            sceneObjectPresent = true;
+            onFlamableObjectPresent?.Invoke();
         }
         else
         {
-            onWallNull?.Invoke();
+            onFlamableObjectNotPresent?.Invoke();
         }
     }
-    private void PostSceneObjectsCheck(bool sceneObjectPresent)
-    {
-        if (!this.sceneObjectPresent)
-        {
-            this.sceneObjectPresent = sceneObjectPresent;
-            if (sceneObjectPresent)
-            {
-                onSceneObjectPresent?.Invoke();
-            }
-            else
-            {
-                onSceneObjectNull?.Invoke();
-            }
-        }
-    }
-
-
 
     public void SceneRequest()
     {
@@ -111,5 +97,15 @@ public class SceneDataManager : MonoBehaviour
     private void OnSceneAnchorLoaded()
     {
         onSceneAnchorLoaded?.Invoke();
+    }
+
+
+    private void SceneObjectFound()
+    {
+
+    }
+    private void SceneObjectNotFound()
+    {
+
     }
 }
