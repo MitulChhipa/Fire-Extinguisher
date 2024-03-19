@@ -6,9 +6,11 @@ public class FirePoint : MonoBehaviour
 {
     public bool fireStarted;
 
-    public void SetFire(GameObject fire)
+    public void SetFire(ref GameObject fire)
     {
-        Instantiate(fire, transform.position,Quaternion.identity,transform);
+        GameObject go = Instantiate(fire, transform.position,Quaternion.identity);
+        go.transform.SetParent(transform);
+
         fireStarted = true;
     }
 }

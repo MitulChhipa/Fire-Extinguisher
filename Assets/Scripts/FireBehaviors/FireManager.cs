@@ -1,3 +1,4 @@
+using Oculus.Interaction.DebugTree;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class FireManager : MonoBehaviour
     public int _totalFlamableObjectTypes;
 
     public int _count;
+    private Vector3 _fireOrigin;
+
 
     public void CacheSceneObjects()
     {
@@ -62,12 +65,44 @@ public class FireManager : MonoBehaviour
 
     private void SetFireToPoints()
     {
-        int index = Random.Range(0, _firePoints.Count);
-        _firePoints[Random.Range(0, _firePoints.Count)].SetFire(_firePrefab);
+        if (_firePoints.Count == 0) { return; }
 
-        _litPoints.Add(_firePoints[index]);
-        _firePoints.Remove(_firePoints[index]);
-        _count++;
+        if (_litPoints.Count == 0)
+        {
+            int index = Random.Range(0, _firePoints.Count);
+            _firePoints[index].SetFire(ref _firePrefab);
+            _fireOrigin = _firePoints[index].transform.position;
+
+            _litPoints.Add(_firePoints[index]);
+            _firePoints.Remove(_firePoints[index]);
+        }
+        else
+        {
+            //FirePoint currentFirePointToLit = GetClosestFirePoint(_litPoints[Random.Range(0, _litPoints.Count)].transform.position);
+            FirePoint currentFirePointToLit = GetClosestFirePoint(_fireOrigin);
+            currentFirePointToLit.SetFire(ref _firePrefab);
+            _litPoints.Add(currentFirePointToLit);
+            _firePoints.Remove(currentFirePointToLit);
+        }
+    }
+
+    private FirePoint GetClosestFirePoint(Vector3 position)
+    {
+        FirePoint closestFirePoint = _firePoints[0];
+        float lastPointDistance = Vector3.Distance(position, _firePoints[0].transform.position);
+
+        foreach (var firePoint in _firePoints)
+        {
+            float currentPointDistance = Vector3.Distance(position, firePoint.transform.position);
+
+            if (currentPointDistance < lastPointDistance)
+            {
+                closestFirePoint = firePoint;
+                lastPointDistance = currentPointDistance;
+            }
+        }
+
+        return closestFirePoint;
     }
 }
 
