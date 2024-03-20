@@ -37,7 +37,7 @@ namespace FireExtinguisher.Manager
                 bool isFlamable = false;
                 for (int j = 0; j < _totalFlamableObjectTypes; j++)
                 {
-                    if (_sceneObjects[i].Contains(((FlamableObjects)j).ToString()))
+                    if (_sceneObjects[i].Contains(((FlammableObjects)j).ToString()))
                     {
                         isFlamable = true;
                         break;
@@ -109,15 +109,16 @@ namespace FireExtinguisher.Manager
         }
     }
 
-    public enum InflamableObjects
+    public enum InflammableObjects
     {
         WALL_FACE,
         DOOR_FRAME,
         WINDOW_FRAME,
-        CEILING
+        CEILING,
+        FLOOR
     }
 
-    public enum FlamableObjects
+    public enum FlammableObjects
     {
         DESK,
         COUCH,
