@@ -115,7 +115,8 @@ namespace FireExtinguisher.Manager
         DOOR_FRAME,
         WINDOW_FRAME,
         CEILING,
-        FLOOR
+        FLOOR,
+        WALL_ART
     }
 
     public enum FlammableObjects
@@ -128,7 +129,6 @@ namespace FireExtinguisher.Manager
         SCREEN,
         LAMP,
         PLANT,
-        TABLE,
-        WALL_ART
+        TABLE
     }
 }
