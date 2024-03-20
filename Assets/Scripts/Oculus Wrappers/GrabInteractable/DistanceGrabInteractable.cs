@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace FireExtinguisher
+namespace FireExtinguisher.Interaction
 {
     public class DistanceGrabInteractable : Oculus.Interaction.DistanceGrabInteractable
     {

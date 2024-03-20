@@ -4,16 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 
-public class SceneDataManager : MonoBehaviour
+namespace FireExtinguisher.SceneData
 {
-    [SerializeField] private OVRSceneManager _sceneManager;
-    public Action onSceneDataRecieved;
-    public bool wallPresent;
-    public bool sceneObjectPresent;
+    public class SceneDataManager : MonoBehaviour
+    {
+        [SerializeField] private OVRSceneManager _sceneManager;
+        public Action onSceneDataRecieved;
+        public bool wallPresent;
+        public bool sceneObjectPresent;
 
-    public static SceneDataManager instance;
+        public static SceneDataManager instance;
 
-    private IEnumerable<string>[] _sceneObjects = { new[] { "DESK" },
+        private IEnumerable<string>[] _sceneObjects = { new[] { "DESK" },
                                                    new[] { "COUCH" },
                                                    new[] { "OTHER" },
                                                    new[] { "STORAGE" },
@@ -24,88 +26,87 @@ public class SceneDataManager : MonoBehaviour
                                                    new[] { "TABLE" },
                                                    new[] { "WALL_ART" }};
 
-    private IEnumerable<string> _wallObjects = new[] { "WALL_FACE" };
+        private IEnumerable<string> _wallObjects = new[] { "WALL_FACE" };
 
-    public UnityEvent onFlamableObjectPresent;
-    public UnityEvent onFlamableObjectNotPresent;
-    public UnityEvent onSceneAnchorLoaded;
+        public UnityEvent onFlamableObjectPresent;
+        public UnityEvent onFlamableObjectNotPresent;
+        public UnityEvent onSceneAnchorLoaded;
 
-    private void Awake()
-    {
-        if (instance == null)
+        private void Awake()
         {
-            instance = this;
+            if (instance == null)
+            {
+                instance = this;
+            }
+
+            _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
+            _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
+
+            CheckForFlamables();
         }
 
-        _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
-        _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
-
-        CheckForFlamables();
-    }
-
-    private void SceneCaptured()
-    {
-        GameData.sceneRequested = true;
-
-        CheckForFlamables();
-    }
-
-    public async Task<int> CheckForSceneObjectsAsync()
-    {
-        int ObjectsPresent = 0;
-
-        for (int i = 0; i < _sceneObjects.Length; i++)
+        private void SceneCaptured()
         {
-            bool result = await _sceneManager.DoesRoomSetupExist(_sceneObjects[i]);
-            if (result)
+            CheckForFlamables();
+        }
+
+        public async Task<int> CheckForSceneObjectsAsync()
+        {
+            int ObjectsPresent = 0;
+
+            for (int i = 0; i < _sceneObjects.Length; i++)
             {
-                ObjectsPresent++;
+                bool result = await _sceneManager.DoesRoomSetupExist(_sceneObjects[i]);
+                if (result)
+                {
+                    ObjectsPresent++;
+                }
+            }
+
+            return ObjectsPresent;
+        }
+
+
+
+
+        private async Task CheckForFlamables()
+        {
+            int result = await CheckForSceneObjectsAsync();
+
+            if (result > 0)
+            {
+                sceneObjectPresent = true;
+                onFlamableObjectPresent?.Invoke();
+            }
+            else
+            {
+                onFlamableObjectNotPresent?.Invoke();
             }
         }
 
-        return ObjectsPresent;
-    }
-
-
-
-
-    private async Task CheckForFlamables()
-    {
-        int result = await CheckForSceneObjectsAsync();
-
-        if (result > 0)
+        public void SceneRequest()
         {
-            sceneObjectPresent = true;
-            onFlamableObjectPresent?.Invoke();
+            _sceneManager.RequestSceneCapture();
         }
-        else
+
+        public void LoadSceneModels()
         {
-            onFlamableObjectNotPresent?.Invoke();
+            _sceneManager.LoadSceneModel();
         }
-    }
 
-    public void SceneRequest()
-    {
-        _sceneManager.RequestSceneCapture();
-    }
-
-    public void LoadSceneModels()
-    {
-        _sceneManager.LoadSceneModel();
-    }
-
-    private void OnSceneAnchorLoaded()
-    {
-        onSceneAnchorLoaded?.Invoke();
-    }
+        private void OnSceneAnchorLoaded()
+        {
+            onSceneAnchorLoaded?.Invoke();
+        }
 
 
-    private void SceneObjectFound()
-    {
+        private void SceneObjectFound()
+        {
 
-    }
-    private void SceneObjectNotFound()
-    {
+        }
+        private void SceneObjectNotFound()
+        {
 
+        }
     }
 }

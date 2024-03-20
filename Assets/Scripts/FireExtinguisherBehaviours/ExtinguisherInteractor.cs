@@ -1,41 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using FireExtinguisher.Fire;
 
-public class ExtinguisherInteractor : MonoBehaviour
+namespace FireExtinguisher.Extinguisher
 {
-    [SerializeField] private CapsuleCollider _capsuleCollider;
-    [SerializeField] private float _height;
-    [SerializeField] private float _radius;
-
-
-    private void OnTriggerEnter(Collider other)
+    public class ExtinguisherInteractor : MonoBehaviour
     {
-        print("==== " +other.tag);
+        [SerializeField] private CapsuleCollider _capsuleCollider;
+        [SerializeField] private float _height;
+        [SerializeField] private float _radius;
 
-        if (other.CompareTag("Fire"))
+
+        private void OnTriggerEnter(Collider other)
         {
-            other.GetComponent<FireBehavior>().StartExtinguishing();
-        }
-    }
+            print("==== " + other.tag);
 
-    private void OnTriggerExit(Collider other)
-    {
-        print("==== " +other.tag);
-        if (other.CompareTag("Fire"))
+            if (other.CompareTag("Fire"))
+            {
+                other.GetComponent<FireBehavior>().StartExtinguishing();
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
         {
-            other.GetComponent<FireBehavior>().StopExtinguishing();
+            print("==== " + other.tag);
+            if (other.CompareTag("Fire"))
+            {
+                other.GetComponent<FireBehavior>().StopExtinguishing();
+            }
         }
-    }
 
-    public void StartInteraction()
-    {
-        _capsuleCollider.height = _height;
-        _capsuleCollider.radius = _radius;
-    }
-    public void StopInteraction()
-    {
-        _capsuleCollider.height = 0;
-        _capsuleCollider.radius = 0;
+        public void StartInteraction()
+        {
+            _capsuleCollider.height = _height;
+            _capsuleCollider.radius = _radius;
+        }
+        public void StopInteraction()
+        {
+            _capsuleCollider.height = 0;
+            _capsuleCollider.radius = 0;
+        }
     }
 }

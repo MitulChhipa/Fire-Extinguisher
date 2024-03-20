@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Oculus.Interaction;
+using FireExtinguisher.Interaction;
 
-namespace FireExtinguisher
+namespace FireExtinguisher.SceneData
 {
     public class WallStopper : MonoBehaviour
     {

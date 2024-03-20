@@ -1,11 +1,9 @@
 using Oculus.Interaction;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FireExtinguisher
+namespace FireExtinguisher.Interaction
 {
     public class TwoGrabTransformer : MonoBehaviour, ITransformer, IInteractionToggle
     {

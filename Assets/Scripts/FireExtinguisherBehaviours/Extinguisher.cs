@@ -1,9 +1,6 @@
-using Oculus.Interaction;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace FireExtinguisher
+namespace FireExtinguisher.Extinguisher
 {
     public class Extinguisher : MonoBehaviour
     {
