@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using FireExtinguisher.Fire;
 
 
-namespace FireExtinguisher.Fire
+namespace FireExtinguisher.Manager
 {
     public class FireManager : MonoBehaviour
     {

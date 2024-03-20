@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FireExtinguisher.UI
+namespace FireExtinguisher.Manager
 {
     public class MenuManager : MonoBehaviour
     {
