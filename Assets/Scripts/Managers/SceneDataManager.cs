@@ -98,15 +98,5 @@ namespace FireExtinguisher.Manager
         {
             onSceneAnchorLoaded?.Invoke();
         }
-
-
-        private void SceneObjectFound()
-        {
-
-        }
-        private void SceneObjectNotFound()
-        {
-
-        }
     }
 }

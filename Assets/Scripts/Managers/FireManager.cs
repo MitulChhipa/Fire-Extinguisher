@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using FireExtinguisher.Fire;
-
+using FireExtinguisher.Extinguisher;
 
 namespace FireExtinguisher.Manager
 {
@@ -14,6 +14,7 @@ namespace FireExtinguisher.Manager
 
         private List<FirePoint> _litPoints = new List<FirePoint>();
 
+        [SerializeField] private FireExtinguisherSpawner _fireExtinguisherSpawner;
         [SerializeField] private GameObject _firePrefab;
         [SerializeField] private GameObject _firePoint;
 
@@ -21,7 +22,6 @@ namespace FireExtinguisher.Manager
 
         public int _count;
         private Vector3 _fireOrigin;
-
 
         public void CacheSceneObjects()
         {
@@ -62,6 +62,8 @@ namespace FireExtinguisher.Manager
             {
                 firePointGenerator.PlacePoints(_firePoint, ref _firePoints);
             }
+
+            _fireExtinguisherSpawner.SetFireExtinguisher();
 
             InvokeRepeating("SetFireToPoints", 1, 1);
         }
@@ -106,6 +108,23 @@ namespace FireExtinguisher.Manager
             }
 
             return closestFirePoint;
+        }
+
+        public float GetClosestFlamableDistance(Vector3 position)
+        {
+            float closestDistance = Vector3.Distance(position, _firePointGenerators[0].transform.position);
+
+            foreach (FirePointGenerator firePointGenerator in _firePointGenerators)
+            {
+                float currentPointDistance = Vector3.Distance(position, firePointGenerator.transform.position);
+
+                if (currentPointDistance < closestDistance)
+                {
+                    closestDistance = currentPointDistance;
+                }
+            }
+
+            return closestDistance;
         }
     }
 
