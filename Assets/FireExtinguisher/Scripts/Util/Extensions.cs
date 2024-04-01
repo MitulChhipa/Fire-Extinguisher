@@ -1,3 +1,5 @@
+using FireExtinguisher.Fire;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FireExtinguisher.Utilities
@@ -32,6 +34,24 @@ namespace FireExtinguisher.Utilities
             }
 
             return max;
+        }
+        public static FirePoint GetClosestFirePoint(this List<FirePoint> firePoints ,Vector3 position)
+        {
+            FirePoint closestFirePoint = firePoints[0];
+            float lastPointDistance = Vector3.Distance(position, firePoints[0].transform.position);
+
+            foreach (var firePoint in firePoints)
+            {
+                float currentPointDistance = Vector3.Distance(position, firePoint.transform.position);
+
+                if (currentPointDistance < lastPointDistance)
+                {
+                    closestFirePoint = firePoint;
+                    lastPointDistance = currentPointDistance;
+                }
+            }
+
+            return closestFirePoint;
         }
     }
 }

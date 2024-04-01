@@ -100,31 +100,11 @@ namespace FireExtinguisher.Manager
             }
             else
             {
-                //FirePoint currentFirePointToLit = GetClosestFirePoint(_litPoints[Random.Range(0, _litPoints.Count)].transform.position);
-                FirePoint currentFirePointToLit = GetClosestFirePoint(_fireOrigin);
+                FirePoint currentFirePointToLit = _firePoints.GetClosestFirePoint(_fireOrigin);
                 currentFirePointToLit.SetFire(ref _firePrefab);
                 _litPoints.Add(currentFirePointToLit);
                 _firePoints.Remove(currentFirePointToLit);
             }
-        }
-
-        private FirePoint GetClosestFirePoint(Vector3 position)
-        {
-            FirePoint closestFirePoint = _firePoints[0];
-            float lastPointDistance = Vector3.Distance(position, _firePoints[0].transform.position);
-
-            foreach (var firePoint in _firePoints)
-            {
-                float currentPointDistance = Vector3.Distance(position, firePoint.transform.position);
-
-                if (currentPointDistance < lastPointDistance)
-                {
-                    closestFirePoint = firePoint;
-                    lastPointDistance = currentPointDistance;
-                }
-            }
-
-            return closestFirePoint;
         }
 
         public float GetClosestFlamableDistance(Vector3 position)
@@ -140,7 +120,6 @@ namespace FireExtinguisher.Manager
                     closestDistance = currentPointDistance;
                 }
             }
-
             return closestDistance;
         }
 
