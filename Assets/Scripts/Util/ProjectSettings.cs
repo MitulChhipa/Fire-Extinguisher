@@ -12,6 +12,7 @@ namespace FireExtinguisher.Utilities
         [EnumFlagsAttribute]
         public SceneObjects flamableObjects;
 
+        #region PropertiesGetter
         public IEnumerable<string>[] GetEnumerableFlamableObjects()
         {
             List<int> selectedElements = new List<int>();
@@ -26,8 +27,6 @@ namespace FireExtinguisher.Utilities
 
 
             IEnumerable<string>[] flamableObjectsArr = new IEnumerable<string>[selectedElements.Count];
-
-            flamableObjectsArr = new IEnumerable<string>[selectedElements.Count];
 
             for (int i = 0; i < selectedElements.Count; i++)
             {
@@ -61,5 +60,6 @@ namespace FireExtinguisher.Utilities
 
             return flamableObjectsArr;
         }
+        #endregion
     }
 }
