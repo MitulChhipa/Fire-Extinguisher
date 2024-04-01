@@ -4,8 +4,12 @@ namespace FireExtinguisher.Fire
 {
     public class FirePoint : MonoBehaviour
     {
-        public bool fireStarted;
+        public bool fireStarted { get; private set; }
+        public bool objectBurnt { get; private set; }
+        
         public bool fireStopped;
+
+        [SerializeField] private float timeRequireToFullyBurn = 30f;
 
         public void SetFire(ref GameObject fire)
         {
@@ -13,6 +17,8 @@ namespace FireExtinguisher.Fire
             go.transform.SetParent(transform);
             go.transform.GetComponentInChildren<FireBehavior>().InjectFirePoint(this);
             fireStarted = true;
+
+            Invoke(nameof(CheckBurn), timeRequireToFullyBurn);
         }
 
         public void StopFire()
@@ -21,6 +27,15 @@ namespace FireExtinguisher.Fire
             {
                 gameObject.SetActive(false);
                 fireStopped = true;
+                CancelInvoke(nameof(CheckBurn));
+            }
+        }
+
+        public void CheckBurn()
+        {
+            if(!fireStopped)
+            {
+                objectBurnt = true;
             }
         }
     }

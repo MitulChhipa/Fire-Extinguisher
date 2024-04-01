@@ -9,5 +9,13 @@ namespace FireExtinguisher.Extinguisher
     {
         [SerializeField] private FireExtinguisherSpawner _fireExtinguisherSpawner;
 
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("FireExtinguisher"))
+            {
+                _fireExtinguisherSpawner.SetFireExtinguisher();
+            }
+        }
     }
 }
