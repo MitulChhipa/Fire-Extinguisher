@@ -51,8 +51,6 @@ namespace FireExtinguisher.Utilities
 
             string[] flamableObjectsArr = new string[selectedElements.Count];
 
-            flamableObjectsArr = new string[selectedElements.Count];
-
             for (int i = 0; i < selectedElements.Count; i++)
             {
                 flamableObjectsArr[i] = ((SceneObjects)selectedElements[i]).ToString();
