@@ -2614,8 +2614,8 @@ MonoBehaviour:
   _fireExtinguisherSpawner: {fileID: 1894154170}
   _firePrefab: {fileID: 3813129721353389041, guid: cf6621669dc91524cae9f675bc8a6e86, type: 3}
   _firePoint: {fileID: 5833771286795879313, guid: abeac2c6c50b06440ad05f16a8ad54bd, type: 3}
-  _totalFlamableObjectTypes: 10
   _count: 0
+  _projectSettings: {fileID: 11400000, guid: 9b0596e4fc3c22146bbfa4a376bb2489, type: 2}
 --- !u!1 &1429548042
 GameObject:
   m_ObjectHideFlags: 0
@@ -3176,6 +3176,7 @@ MonoBehaviour:
   _sceneManager: {fileID: 1182118573}
   wallPresent: 0
   sceneObjectPresent: 0
+  _projectSettings: {fileID: 11400000, guid: 9b0596e4fc3c22146bbfa4a376bb2489, type: 2}
   onFlamableObjectPresent:
     m_PersistentCalls:
       m_Calls:

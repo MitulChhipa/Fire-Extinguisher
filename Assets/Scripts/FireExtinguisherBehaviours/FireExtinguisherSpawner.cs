@@ -24,7 +24,7 @@ namespace FireExtinguisher.Extinguisher
         {
             if (!_extinguisherInstantiated)
             {
-                _classification = FindObjectsOfType<OVRSemanticClassification>().Where(c => c.Contains(InflammableObjects.WALL_FACE.ToString())).ToArray();
+                _classification = FindObjectsOfType<OVRSemanticClassification>().Where(c => c.Contains(SceneObjects.WALL_FACE.ToString())).ToArray();
 
                 if (_fireExtinguisherPoints.Count == 0)
                 {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Threading.Tasks;
+using FireExtinguisher.Utilities;
+using Unity.VisualScripting;
+using UnityEngine.Playables;
 
 namespace FireExtinguisher.Manager
 {
@@ -12,21 +15,13 @@ namespace FireExtinguisher.Manager
         public Action onSceneDataRecieved;
         public bool wallPresent;
         public bool sceneObjectPresent;
+        [SerializeField] private ProjectSettings _projectSettings;
 
         public static SceneDataManager instance;
 
-        private IEnumerable<string>[] _sceneObjects = { new[] { "DESK" },
-                                                   new[] { "COUCH" },
-                                                   new[] { "OTHER" },
-                                                   new[] { "STORAGE" },
-                                                   new[] { "BED" },
-                                                   new[] { "SCREEN" },
-                                                   new[] { "LAMP" },
-                                                   new[] { "PLANT" },
-                                                   new[] { "TABLE" },
-                                                   new[] { "WALL_ART" }};
+        private IEnumerable<string>[] _sceneObjects ;
 
-        private IEnumerable<string> _wallObjects = new[] { "WALL_FACE" };
+        private IEnumerable<string> _wallObjects = new[] { SceneObjects.WALL_FACE.ToString() };
 
         public UnityEvent onFlamableObjectPresent;
         public UnityEvent onFlamableObjectNotPresent;
@@ -41,6 +36,8 @@ namespace FireExtinguisher.Manager
 
             _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
             _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
+
+            _sceneObjects = _projectSettings.GetEnumerableFlamableObjects();
 
             CheckForFlamables();
         }
@@ -57,6 +54,7 @@ namespace FireExtinguisher.Manager
             for (int i = 0; i < _sceneObjects.Length; i++)
             {
                 bool result = await _sceneManager.DoesRoomSetupExist(_sceneObjects[i]);
+                print(_sceneObjects[i].ToString());
                 if (result)
                 {
                     ObjectsPresent++;

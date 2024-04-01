@@ -1,17 +1,14 @@
 namespace FireExtinguisher.Utilities
 {
-    public enum InflammableObjects
+    [System.Serializable]
+    public enum SceneObjects
     {
         WALL_FACE,
         DOOR_FRAME,
         WINDOW_FRAME,
         CEILING,
         FLOOR,
-        WALL_ART
-    }
-
-    public enum FlammableObjects
-    {
+        WALL_ART,
         DESK,
         COUCH,
         OTHER,

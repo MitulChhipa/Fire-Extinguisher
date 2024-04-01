@@ -21,10 +21,9 @@ namespace FireExtinguisher.Manager
         [SerializeField] private GameObject _firePrefab;
         [SerializeField] private GameObject _firePoint;
 
-        public int _totalFlamableObjectTypes;
-
         public int _count;
         private Vector3 _fireOrigin;
+        [SerializeField] private ProjectSettings _projectSettings;
 
 
         private void OnEnable()
@@ -45,12 +44,17 @@ namespace FireExtinguisher.Manager
 
         private void FetchFlamableObjects()
         {
-            for (int i = 0; i < _sceneObjects.Length; i++)
+            string[] flamableObj = _projectSettings.GetFlamableObjects();
+
+            int sceneObjectsLength = _sceneObjects.Length;
+            int flamableObjectsLength = flamableObj.Length;
+
+            for (int i = 0; i < sceneObjectsLength; i++)
             {
                 bool isFlamable = false;
-                for (int j = 0; j < _totalFlamableObjectTypes; j++)
+                for (int j = 0; j < flamableObjectsLength; j++)
                 {
-                    if (_sceneObjects[i].Contains(((FlammableObjects)j).ToString()))
+                    if (_sceneObjects[i].Contains(flamableObj[j]))
                     {
                         isFlamable = true;
                         break;

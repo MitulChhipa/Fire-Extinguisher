@@ -29,7 +29,6 @@ namespace FireExtinguisher.Interaction
         private TransformerUtils.PositionConstraints _parentConstraints;
 
         private bool _canMove = true;
-        private bool _checkDistance;
 
         public void Initialize(IGrabbable grabbable)
         {
@@ -78,7 +77,6 @@ namespace FireExtinguisher.Interaction
         public void DisableInteractionMovement()
         {
             _canMove = false;
-            _checkDistance = true;
         }
     }
 }
