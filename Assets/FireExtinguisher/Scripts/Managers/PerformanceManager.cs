@@ -11,5 +11,10 @@ namespace FireExtinguisher.Manager
         {
             Unity.XR.Oculus.Performance.TryGetAvailableDisplayRefreshRates(out _availableRefreshRates);
         }
+
+        public void SetRefreshRates(float refreshRate)
+        {
+            Unity.XR.Oculus.Performance.TrySetDisplayRefreshRate(refreshRate);
+        }
     }
 }
