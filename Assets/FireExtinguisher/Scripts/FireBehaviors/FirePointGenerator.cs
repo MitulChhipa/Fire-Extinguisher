@@ -11,28 +11,27 @@ namespace FireExtinguisher.Fire
 
         public Vector2 cellSize = new Vector2(1f, 1f);
         [SerializeField] private Transform _scalerTransform;
-        public int gridSizeX;
-        public int gridSizeZ;
-        public int gridSizeY;
+        private int _gridSizeX;
+        private int _gridSizeY;
 
 
         public void PlacePoints(GameObject pointObject, ref List<FirePoint> firePoints)
         {
             int count = 0;
 
-            gridSizeX = (int)(_scalerTransform.lossyScale.x / cellSize.x);
-            gridSizeY = (int)(_scalerTransform.lossyScale.y / cellSize.y);
+            _gridSizeX = (int)(_scalerTransform.lossyScale.x / cellSize.x);
+            _gridSizeY = (int)(_scalerTransform.lossyScale.y / cellSize.y);
 
 
             Vector3 position = new Vector3();
 
             position.x = (-_scalerTransform.lossyScale.x / 2) + cellSize.x / 2;
 
-            for (int x = 0; x < gridSizeX; x++)
+            for (int x = 0; x < _gridSizeX; x++)
             {
                 position.z = (-_scalerTransform.lossyScale.y / 2) + +cellSize.y / 2;
 
-                for (int y = 0; y < gridSizeY; y++)
+                for (int y = 0; y < _gridSizeY; y++)
                 {
                     GameObject go = Instantiate(pointObject, _firePointsParent);
                     go.transform.position = position + _firePointsParent.position;

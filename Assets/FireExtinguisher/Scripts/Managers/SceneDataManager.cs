@@ -37,7 +37,7 @@ namespace FireExtinguisher.Manager
             _sceneManager.SceneCaptureReturnedWithoutError += SceneCaptured;
             _sceneManager.SceneModelLoadedSuccessfully += OnSceneAnchorLoaded;
 
-            _sceneObjects = _projectSettings.GetEnumerableFlamableObjects();
+            _sceneObjects = _projectSettings.GetFlamableObjectsEnumerable();
 
             CheckForFlamables();
         }

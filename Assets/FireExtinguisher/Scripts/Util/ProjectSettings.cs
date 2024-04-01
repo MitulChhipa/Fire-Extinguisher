@@ -12,7 +12,7 @@ namespace FireExtinguisher.Utilities
         public SceneObjects flamableObjects;
 
         #region PropertiesGetter
-        public IEnumerable<string>[] GetEnumerableFlamableObjects()
+        public IEnumerable<string>[] GetFlamableObjectsEnumerable()
         {
             List<int> selectedElements = new List<int>();
             for (int i = 0; i < System.Enum.GetValues(typeof(SceneObjects)).Length; i++)
