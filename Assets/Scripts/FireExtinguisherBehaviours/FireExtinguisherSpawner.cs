@@ -1,10 +1,8 @@
-using FireExtinguisher.Fire;
 using FireExtinguisher.Manager;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using FireExtinguisher.Interaction;
+using FireExtinguisher.Utilities;
 
 
 

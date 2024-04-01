@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace FireExtinguisher.Fire
@@ -9,7 +10,9 @@ namespace FireExtinguisher.Fire
         
         public bool fireStopped;
 
-        [SerializeField] private float timeRequireToFullyBurn = 30f;
+        [SerializeField] private float _timeRequireToFullyBurn = 30f;
+
+        public static Action<FirePoint> OnFirePointBurnt;
 
         public void SetFire(ref GameObject fire)
         {
@@ -18,7 +21,7 @@ namespace FireExtinguisher.Fire
             go.transform.GetComponentInChildren<FireBehavior>().InjectFirePoint(this);
             fireStarted = true;
 
-            Invoke(nameof(CheckBurn), timeRequireToFullyBurn);
+            Invoke(nameof(CheckBurn), _timeRequireToFullyBurn);
         }
 
         public void StopFire()
@@ -36,6 +39,7 @@ namespace FireExtinguisher.Fire
             if(!fireStopped)
             {
                 objectBurnt = true;
+                OnFirePointBurnt?.Invoke(this);
             }
         }
     }

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using FireExtinguisher.Fire;
 using FireExtinguisher.Extinguisher;
+using FireExtinguisher.Utilities;
+
 
 namespace FireExtinguisher.Manager
 {
@@ -10,9 +12,10 @@ namespace FireExtinguisher.Manager
         private OVRSemanticClassification[] _sceneObjects;
         [SerializeField] private List<OVRSemanticClassification> _flamableObjects = new List<OVRSemanticClassification>();
         [SerializeField] private List<FirePointGenerator> _firePointGenerators = new List<FirePointGenerator>();
-        private List<FirePoint> _firePoints = new List<FirePoint>();
 
+        private List<FirePoint> _firePoints = new List<FirePoint>();
         private List<FirePoint> _litPoints = new List<FirePoint>();
+        private List<FirePoint> _burntFirePoint = new List<FirePoint>();
 
         [SerializeField] private FireExtinguisherSpawner _fireExtinguisherSpawner;
         [SerializeField] private GameObject _firePrefab;
@@ -22,6 +25,16 @@ namespace FireExtinguisher.Manager
 
         public int _count;
         private Vector3 _fireOrigin;
+
+
+        private void OnEnable()
+        {
+            FirePoint.OnFirePointBurnt += FirePointBurnt;
+        }
+        private void OnDisable()
+        {
+            FirePoint.OnFirePointBurnt -= FirePointBurnt;
+        }
 
         public void CacheSceneObjects()
         {
@@ -126,28 +139,10 @@ namespace FireExtinguisher.Manager
 
             return closestDistance;
         }
-    }
 
-    public enum InflammableObjects
-    {
-        WALL_FACE,
-        DOOR_FRAME,
-        WINDOW_FRAME,
-        CEILING,
-        FLOOR,
-        WALL_ART
-    }
-
-    public enum FlammableObjects
-    {
-        DESK,
-        COUCH,
-        OTHER,
-        STORAGE,
-        BED,
-        SCREEN,
-        LAMP,
-        PLANT,
-        TABLE
+        public void FirePointBurnt(FirePoint firePoint)
+        {
+            _burntFirePoint.Add(firePoint);
+        }
     }
 }
