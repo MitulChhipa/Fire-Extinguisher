@@ -8,6 +8,7 @@ TagManager:
   - Extinguisher
   - FireExtinguisher
   - Boundary
+  - Classification
   layers:
   - Default
   - TransparentFX
