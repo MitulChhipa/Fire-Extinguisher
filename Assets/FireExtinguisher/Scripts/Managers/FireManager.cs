@@ -26,10 +26,10 @@ namespace FireExtinguisher.Manager
         private Vector3 _fireOrigin;
         [SerializeField] private ProjectSettings _projectSettings;
 
-        [Range(0f, 0.5f)]
-        [SerializeField] private float _warningProximity;
-        [Range(0.5f, 1f)]
-        [SerializeField] private float _losingProximity;
+        [Range(0f, 1f)]
+        [SerializeField] private float _warningThreshold;
+        [Range(0f, 1f)]
+        [SerializeField] private float _losingThreshold;
         private int _totalFirePoints;
 
         private void OnEnable()
@@ -97,6 +97,8 @@ namespace FireExtinguisher.Manager
 
         private void SetFireToPoints()
         {
+            CheckWarningCondition();
+
             if (_unlitFirePoints.Count == 0) { return; }
 
             if (_litFirePoints.Count == 0)
@@ -116,7 +118,6 @@ namespace FireExtinguisher.Manager
                 _unlitFirePoints.Remove(currentFirePointToLit);
             }
         }
-
         public float GetClosestFlamableDistance(Vector3 position)
         {
             float closestDistance = Vector3.Distance(position, _firePointGenerators[0].transform.position);
@@ -132,31 +133,25 @@ namespace FireExtinguisher.Manager
             }
             return closestDistance;
         }
-
         private void FirePointBurnt(FirePoint firePoint)
         {
             _burntFirePoints.Add(firePoint);
-
             CheckLoseCondition();
         }
-
-        private void CheckLoseCondition()
-        {
-            if (_burntFirePoints.Count > (_totalFirePoints * _losingProximity))
-            {
-                print("Lose");
-                GameManager.OnLost?.Invoke();
-            }
-            if (_burntFirePoints.Count > (_totalFirePoints * _warningProximity))
-            {
-                GameManager.OnWarning?.Invoke();
-            }
-        }
-
         private void FirePointStoppedBurning(FirePoint firePoint)
         {
             _extinguishedFirePoints.Add(firePoint);
             CheckWinCondition();
+        }
+
+        #region Conditions
+        private void CheckLoseCondition()
+        {
+            if (_burntFirePoints.Count > (_totalFirePoints * _losingThreshold))
+            {
+                print("Lose");
+                GameManager.OnLost?.Invoke();
+            }
         }
 
         private void CheckWinCondition()
@@ -166,6 +161,16 @@ namespace FireExtinguisher.Manager
                 print("Won");
                 GameManager.OnWon?.Invoke();
             }
+        }   
+       
+        private void CheckWarningCondition()
+        {
+            if (_extinguishedFirePoints.Count < _litFirePoints.Count)
+            {
+                print("warning");
+                GameManager.OnWarning?.Invoke();
+            }
         }
+        #endregion
     }
 }
