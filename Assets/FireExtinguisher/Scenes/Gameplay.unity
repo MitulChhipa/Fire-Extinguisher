@@ -6605,6 +6605,7 @@ MonoBehaviour:
   _firePointsParent: {fileID: 339661912}
   cellSize: {x: 0.25, y: 0.25}
   _scalerTransform: {fileID: 96094184}
+  _meshRenderer: {fileID: 792617387}
 --- !u!1 &471417831
 GameObject:
   m_ObjectHideFlags: 0
@@ -16900,6 +16901,7 @@ MonoBehaviour:
   _firePointsParent: {fileID: 529933062}
   cellSize: {x: 0.25, y: 0.25}
   _scalerTransform: {fileID: 1706874770}
+  _meshRenderer: {fileID: 1300185007}
 --- !u!114 &1300185012
 MonoBehaviour:
   m_ObjectHideFlags: 0
