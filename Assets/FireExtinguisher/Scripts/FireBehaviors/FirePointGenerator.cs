@@ -14,9 +14,6 @@ namespace FireExtinguisher.Fire
         private int _gridSizeX;
         private int _gridSizeY;
 
-        public GameObject _firePointPrefab;
-        public List<FirePoint> _firePoints = new List<FirePoint>();
-
         public void PlacePoints(GameObject pointObject, ref List<FirePoint> firePoints)
         {
             int count = 0;
