@@ -10,7 +10,6 @@ namespace FireExtinguisher.Fire
         [SerializeField] private Transform _firePointsParent;
 
         public Vector2 cellSize = new Vector2(1f, 1f);
-        [SerializeField] private Transform _scalerTransform;
         private int _gridSizeX;
         private int _gridSizeY;
 
