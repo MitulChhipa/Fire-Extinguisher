@@ -13,9 +13,10 @@ namespace FireExtinguisher.Manager
         [SerializeField] private List<OVRSemanticClassification> _flamableObjects = new List<OVRSemanticClassification>();
         [SerializeField] private List<FirePointGenerator> _firePointGenerators = new List<FirePointGenerator>();
 
-        private List<FirePoint> _firePoints = new List<FirePoint>();
-        private List<FirePoint> _litPoints = new List<FirePoint>();
-        private List<FirePoint> _burntFirePoint = new List<FirePoint>();
+        private List<FirePoint> _unlitFirePoints = new List<FirePoint>();
+        private List<FirePoint> _litFirePoints = new List<FirePoint>();
+        private List<FirePoint> _burntFirePoints = new List<FirePoint>();
+        private List<FirePoint> _extinguishedFirePoints = new List<FirePoint>();
 
         [SerializeField] private FireExtinguisherSpawner _fireExtinguisherSpawner;
         [SerializeField] private GameObject _firePrefab;
@@ -25,14 +26,19 @@ namespace FireExtinguisher.Manager
         private Vector3 _fireOrigin;
         [SerializeField] private ProjectSettings _projectSettings;
 
+        [Range(0f, 1f)]
+        private float _losingProximity;
+        private int _totalFirePoints;
 
         private void OnEnable()
         {
             FirePoint.OnFirePointBurnt += FirePointBurnt;
+            FirePoint.OnFireStopped += FirePointStoppedBurning;
         }
         private void OnDisable()
         {
             FirePoint.OnFirePointBurnt -= FirePointBurnt;
+            FirePoint.OnFireStopped -= FirePointStoppedBurning;
         }
 
         public void CacheSceneObjects()
@@ -77,9 +83,11 @@ namespace FireExtinguisher.Manager
 
             foreach (FirePointGenerator firePointGenerator in _firePointGenerators)
             {
-                firePointGenerator.PlacePoints(_firePoint, ref _firePoints);
+                firePointGenerator.PlacePoints(_firePoint, ref _unlitFirePoints);
             }
 
+
+            _totalFirePoints = _unlitFirePoints.Count;
             _fireExtinguisherSpawner.SetFireExtinguisher();
 
             InvokeRepeating("SetFireToPoints", 1, 1);
@@ -87,23 +95,23 @@ namespace FireExtinguisher.Manager
 
         private void SetFireToPoints()
         {
-            if (_firePoints.Count == 0) { return; }
+            if (_unlitFirePoints.Count == 0) { return; }
 
-            if (_litPoints.Count == 0)
+            if (_litFirePoints.Count == 0)
             {
-                int index = Random.Range(0, _firePoints.Count);
-                _firePoints[index].SetFire(ref _firePrefab);
-                _fireOrigin = _firePoints[index].transform.position;
+                int index = Random.Range(0, _unlitFirePoints.Count);
+                _unlitFirePoints[index].SetFire(ref _firePrefab);
+                _fireOrigin = _unlitFirePoints[index].transform.position;
 
-                _litPoints.Add(_firePoints[index]);
-                _firePoints.Remove(_firePoints[index]);
+                _litFirePoints.Add(_unlitFirePoints[index]);
+                _unlitFirePoints.Remove(_unlitFirePoints[index]);
             }
             else
             {
-                FirePoint currentFirePointToLit = _firePoints.GetClosestFirePoint(_fireOrigin);
+                FirePoint currentFirePointToLit = _unlitFirePoints.GetClosestFirePoint(_fireOrigin);
                 currentFirePointToLit.SetFire(ref _firePrefab);
-                _litPoints.Add(currentFirePointToLit);
-                _firePoints.Remove(currentFirePointToLit);
+                _litFirePoints.Add(currentFirePointToLit);
+                _unlitFirePoints.Remove(currentFirePointToLit);
             }
         }
 
@@ -123,9 +131,35 @@ namespace FireExtinguisher.Manager
             return closestDistance;
         }
 
-        public void FirePointBurnt(FirePoint firePoint)
+        private void FirePointBurnt(FirePoint firePoint)
         {
-            _burntFirePoint.Add(firePoint);
+            _burntFirePoints.Add(firePoint);
+
+            CheckLoseCondition();
+        }
+
+        private void CheckLoseCondition()
+        {
+            if (_burntFirePoints.Count > (_totalFirePoints * _losingProximity))
+            {
+                print("Lose");
+                GameManager.OnLose?.Invoke();
+            }
+        }
+
+        private void FirePointStoppedBurning(FirePoint firePoint)
+        {
+            _extinguishedFirePoints.Add(firePoint);
+            CheckWinCondition();
+        }
+
+        private void CheckWinCondition()
+        {
+            if (_extinguishedFirePoints.Count == _litFirePoints.Count)
+            {
+                print("Won");
+                GameManager.OnWin?.Invoke();
+            }
         }
     }
 }

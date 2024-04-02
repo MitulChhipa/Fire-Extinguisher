@@ -13,6 +13,7 @@ namespace FireExtinguisher.Fire
         [SerializeField] private float _timeRequireToFullyBurn = 30f;
 
         public static Action<FirePoint> OnFirePointBurnt;
+        public static Action<FirePoint> OnFireStopped;
 
         public void SetFire(ref GameObject fire)
         {
@@ -31,7 +32,10 @@ namespace FireExtinguisher.Fire
                 gameObject.SetActive(false);
                 fireStopped = true;
                 CancelInvoke(nameof(CheckBurn));
+                OnFireStopped?.Invoke(this);
             }
+
+
         }
 
         public void CheckBurn()
