@@ -8,6 +8,7 @@ namespace FireExtinguisher.Utilities
     public class ProjectSettings : ScriptableObject
     {
         public float version;
+
         [EnumFlagsAttribute]
         public SceneObjects flamableObjects;
 
@@ -25,14 +26,14 @@ namespace FireExtinguisher.Utilities
             }
 
 
-            IEnumerable<string>[] flamableObjectsArr = new IEnumerable<string>[selectedElements.Count];
+            IEnumerable<string>[] flamableObjectList = new IEnumerable<string>[selectedElements.Count];
 
             for (int i = 0; i < selectedElements.Count; i++)
             {
-                flamableObjectsArr[i] = new[] { ((SceneObjects)selectedElements[i]).ToString() };
+                flamableObjectList[i] = new[] { ((SceneObjects)selectedElements[i]).ToString() };
             }
 
-            return flamableObjectsArr;
+            return flamableObjectList;
         }
 
         public string[] GetFlamableObjects()
@@ -48,14 +49,14 @@ namespace FireExtinguisher.Utilities
             }
 
 
-            string[] flamableObjectsArr = new string[selectedElements.Count];
+            string[] flamableObjectList = new string[selectedElements.Count];
 
             for (int i = 0; i < selectedElements.Count; i++)
             {
-                flamableObjectsArr[i] = ((SceneObjects)selectedElements[i]).ToString();
+                flamableObjectList[i] = ((SceneObjects)selectedElements[i]).ToString();
             }
 
-            return flamableObjectsArr;
+            return flamableObjectList;
         }
         #endregion
     }

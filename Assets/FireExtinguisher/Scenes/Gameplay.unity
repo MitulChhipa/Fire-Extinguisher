@@ -8486,7 +8486,7 @@ GameObject:
   - component: {fileID: 469430047}
   m_Layer: 9
   m_Name: Volume
-  m_TagString: Untagged
+  m_TagString: Classification
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13640,7 +13640,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 10
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &770127331
 Transform:
@@ -23342,7 +23342,7 @@ GameObject:
   - component: {fileID: 1300185012}
   m_Layer: 9
   m_Name: PlaneMesh
-  m_TagString: Untagged
+  m_TagString: Classification
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
