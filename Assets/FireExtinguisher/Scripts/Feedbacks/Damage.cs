@@ -1,7 +1,7 @@
 using FireExtinguisher.Manager;
 using UnityEngine;
 
-namespace FireExtinguisher.Player
+namespace FireExtinguisher.Feedbacks
 {
     public class Damage : MonoBehaviour
     {
