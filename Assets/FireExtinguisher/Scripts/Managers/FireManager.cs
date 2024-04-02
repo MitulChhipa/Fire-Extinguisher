@@ -98,7 +98,7 @@ namespace FireExtinguisher.Manager
         private void SetFireToPoints()
         {
             CheckWarningCondition();
-
+            
             if (_unlitFirePoints.Count == 0) { return; }
 
             if (_litFirePoints.Count == 0)
@@ -165,7 +165,7 @@ namespace FireExtinguisher.Manager
        
         private void CheckWarningCondition()
         {
-            if (_extinguishedFirePoints.Count < _litFirePoints.Count)
+            if ((_extinguishedFirePoints.Count < _litFirePoints.Count * _warningThreshold) && (_litFirePoints.Count > (_totalFirePoints * _warningThreshold)))
             {
                 print("warning");
                 GameManager.OnWarning?.Invoke();
