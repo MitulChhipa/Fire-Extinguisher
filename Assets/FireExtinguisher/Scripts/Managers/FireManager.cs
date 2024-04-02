@@ -3,6 +3,7 @@ using UnityEngine;
 using FireExtinguisher.Fire;
 using FireExtinguisher.Extinguisher;
 using FireExtinguisher.Utilities;
+using Unity.VisualScripting;
 
 
 namespace FireExtinguisher.Manager
@@ -22,12 +23,13 @@ namespace FireExtinguisher.Manager
         [SerializeField] private GameObject _firePrefab;
         [SerializeField] private GameObject _firePoint;
 
-        public int _count;
         private Vector3 _fireOrigin;
         [SerializeField] private ProjectSettings _projectSettings;
 
-        [Range(0f, 1f)]
-        private float _losingProximity;
+        [Range(0f, 0.5f)]
+        [SerializeField] private float _warningProximity;
+        [Range(0.5f, 1f)]
+        [SerializeField] private float _losingProximity;
         private int _totalFirePoints;
 
         private void OnEnable()
@@ -143,7 +145,11 @@ namespace FireExtinguisher.Manager
             if (_burntFirePoints.Count > (_totalFirePoints * _losingProximity))
             {
                 print("Lose");
-                GameManager.OnLose?.Invoke();
+                GameManager.OnLost?.Invoke();
+            }
+            if (_burntFirePoints.Count > (_totalFirePoints * _warningProximity))
+            {
+                GameManager.OnWarning?.Invoke();
             }
         }
 
@@ -158,7 +164,7 @@ namespace FireExtinguisher.Manager
             if (_extinguishedFirePoints.Count == _litFirePoints.Count)
             {
                 print("Won");
-                GameManager.OnWin?.Invoke();
+                GameManager.OnWon?.Invoke();
             }
         }
     }
