@@ -61,7 +61,7 @@ namespace FireExtinguisher.Utilities
             return flamableObjectList;
         }       
         
-        public IEnumerable<string>[] GetPlacableObjectsEnumerable()
+        public IEnumerable<string>[] GetPlaceableObjectsEnumerable()
         {
             List<int> selectedElements = new List<int>();
             for (int i = 0; i < System.Enum.GetValues(typeof(SceneObjects)).Length; i++)
@@ -74,17 +74,17 @@ namespace FireExtinguisher.Utilities
             }
 
 
-            IEnumerable<string>[] placableObjects = new IEnumerable<string>[selectedElements.Count];
+            IEnumerable<string>[] placeableObjects = new IEnumerable<string>[selectedElements.Count];
 
             for (int i = 0; i < selectedElements.Count; i++)
             {
-                placableObjects[i] = new[] { ((SceneObjects)selectedElements[i]).ToString() };
+                placeableObjects[i] = new[] { ((SceneObjects)selectedElements[i]).ToString() };
             }
 
-            return placableObjects;
+            return placeableObjects;
         }
 
-        public string[] GetPlacableObjectsObjects()
+        public string[] GetPlaceableObjectsObjects()
         {
             List<int> selectedElements = new List<int>();
             for (int i = 0; i < System.Enum.GetValues(typeof(SceneObjects)).Length; i++)
@@ -97,14 +97,14 @@ namespace FireExtinguisher.Utilities
             }
 
 
-            string[] placableObjects = new string[selectedElements.Count];
+            string[] placeableObjects = new string[selectedElements.Count];
 
             for (int i = 0; i < selectedElements.Count; i++)
             {
-                placableObjects[i] = ((SceneObjects)selectedElements[i]).ToString();
+                placeableObjects[i] = ((SceneObjects)selectedElements[i]).ToString();
             }
 
-            return placableObjects;
+            return placeableObjects;
         }
         #endregion
 

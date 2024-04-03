@@ -16,8 +16,8 @@ namespace FireExtinguisher.Extinguisher
         private GameObject _fireExtinguisher;
         private OVRSemanticClassification[] _classification;
 
-        private List<OVRSemanticClassification> _placableClassificationList = new List<OVRSemanticClassification>();
-        private List<OVRSemanticClassification> _nonPlacableClassificationList = new List<OVRSemanticClassification>();
+        private List<OVRSemanticClassification> _placeableClassificationList = new List<OVRSemanticClassification>();
+        private List<OVRSemanticClassification> _nonPlaceableClassificationList = new List<OVRSemanticClassification>();
 
         private float _zAxisSize;
         private bool _extinguisherInstantiated = false;
@@ -30,7 +30,7 @@ namespace FireExtinguisher.Extinguisher
             if (!_extinguisherInstantiated)
             {
                 _classification = FindObjectsOfType<OVRSemanticClassification>();
-                FillOutPlacableAndNonPlacable();
+                FillOutPlaceableAndNonPlaceable();
 
                 _fireExtinguisher = Instantiate(_fireExtinguisherPrefab);
 
@@ -52,61 +52,61 @@ namespace FireExtinguisher.Extinguisher
             }
 
             _fireExtinguisherRigidbody.isKinematic = true;
-            GetBestPlacableToPlace().GetComponent<FireExtinguisherPoint>().PlaceFireExtinguisher(_fireExtinguisher.transform, _zAxisSize);
+            GetBestPlaceableToPlace().GetComponent<FireExtinguisherPoint>().PlaceFireExtinguisher(_fireExtinguisher.transform, _zAxisSize);
             _extinguisherInstantiated = true;
         }
 
-        private OVRSemanticClassification GetBestPlacableToPlace()
+        private OVRSemanticClassification GetBestPlaceableToPlace()
         {
             float farestDistance = 0;
-            OVRSemanticClassification bestFireExtinguisherPoint = _placableClassificationList[0];
+            OVRSemanticClassification bestFireExtinguisherPoint = _placeableClassificationList[0];
 
-            for (int i = 1; i < _placableClassificationList.Count; i++)
+            for (int i = 1; i < _placeableClassificationList.Count; i++)
             {
-                float currentClosestFlamableDistance = GetClosestNonPlacableDistance(_placableClassificationList[i].transform.position);
+                float currentClosestFlamableDistance = GetClosestNonPlaceableDistance(_placeableClassificationList[i].transform.position);
                 if (currentClosestFlamableDistance > farestDistance)
                 {
                     farestDistance = currentClosestFlamableDistance;
-                    bestFireExtinguisherPoint = _placableClassificationList[i];
+                    bestFireExtinguisherPoint = _placeableClassificationList[i];
                 }
             }
 
             return bestFireExtinguisherPoint;
         }
 
-        private void FillOutPlacableAndNonPlacable()
+        private void FillOutPlaceableAndNonPlaceable()
         {
-            string[] placableObjectNames = projectSettings.GetPlacableObjectsObjects();
+            string[] placeableObjectNames = projectSettings.GetPlaceableObjectsObjects();
 
             for (int i = 0; i < _classification.Length; i++)
             {
-                bool isPlacable = false;
+                bool isPlaceable = false;
 
-                for (int j = 0; j < placableObjectNames.Length; j++)
+                for (int j = 0; j < placeableObjectNames.Length; j++)
                 {
-                    if (_classification[i].Contains(placableObjectNames[j]))
+                    if (_classification[i].Contains(placeableObjectNames[j]))
                     {
-                        isPlacable = true;
+                        isPlaceable = true;
                         break;
                     }
                 }
 
-                if (isPlacable)
+                if (isPlaceable)
                 {
-                    _placableClassificationList.Add(_classification[i]);
+                    _placeableClassificationList.Add(_classification[i]);
                 }
                 else
                 {
-                    _nonPlacableClassificationList.Add(_classification[i]);
+                    _nonPlaceableClassificationList.Add(_classification[i]);
                 }
             }
         }
 
-        public float GetClosestNonPlacableDistance(Vector3 position)
+        public float GetClosestNonPlaceableDistance(Vector3 position)
         {
-            float closestDistance = Vector3.Distance(position, _nonPlacableClassificationList[0].transform.position);
+            float closestDistance = Vector3.Distance(position, _nonPlaceableClassificationList[0].transform.position);
 
-            foreach (OVRSemanticClassification firePointGenerator in _nonPlacableClassificationList)
+            foreach (OVRSemanticClassification firePointGenerator in _nonPlaceableClassificationList)
             {
                 float currentPointDistance = Vector3.Distance(position, firePointGenerator.transform.position);
 

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa768d156ad4664382719de596fa69b, type: 3}
   m_Name: ProjectSettings
   m_EditorClassIdentifier: 
-  version: 0.03
+  version: 0.04
   flamableObjects: 32704
   fireExtinguisherPlacement: 1
