@@ -2319,7 +2319,7 @@ MonoBehaviour:
   _warningThreshold: 0.5
   _losingThreshold: 0.8
   _fireStartTime: 1
-  _fireRepeatingTime: 1
+  _fireRepeatingInterval: 2
 --- !u!1 &1429548042
 GameObject:
   m_ObjectHideFlags: 0
