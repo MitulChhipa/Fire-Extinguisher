@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class VersionSetter : MonoBehaviour
+namespace FireExtinguisher.Utilities
 {
-    [SerializeField] private ProjectSettings _projectSettings;
-    private TextMeshProUGUI _text;
-
-    private void Awake()
+    public class VersionSetter : MonoBehaviour
     {
-        _text = GetComponent<TextMeshProUGUI>();
-        _text.text = $"V{_projectSettings.version}";
+        [SerializeField] private ProjectSettings _projectSettings;
+        private TextMeshProUGUI _text;
+
+        private void Awake()
+        {
+            _text = GetComponent<TextMeshProUGUI>();
+            _text.text = $"V{_projectSettings.version}";
+        }
     }
 }
