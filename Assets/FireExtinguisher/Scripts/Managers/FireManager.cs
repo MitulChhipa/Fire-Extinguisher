@@ -35,7 +35,7 @@ namespace FireExtinguisher.Manager
         [SerializeField] private float _fireStartTime = 1f;
         
         [Range(1f, 5f)]
-        [SerializeField] private float _fireRepeatingTime = 2f;
+        [SerializeField] private float _fireRepeatingInterval = 2f;
 
         private void OnEnable()
         {
@@ -96,7 +96,7 @@ namespace FireExtinguisher.Manager
 
             _totalFirePoints = _unlitFirePoints.Count;
 
-            InvokeRepeating(nameof(SetFireToPoints), _fireStartTime, _fireRepeatingTime);
+            InvokeRepeating(nameof(SetFireToPoints), _fireStartTime, _fireRepeatingInterval);
         }
 
         private void SetFireToPoints()

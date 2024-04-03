@@ -9,6 +9,7 @@ TagManager:
   - FireExtinguisher
   - Boundary
   - Classification
+  - UiSound
   layers:
   - Default
   - TransparentFX
