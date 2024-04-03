@@ -107,5 +107,10 @@ namespace FireExtinguisher.Utilities
             return placableObjects;
         }
         #endregion
+
+        public void UpdateVersion()
+        {
+            version = Mathf.Round((version + 0.01f) * 100) / 100f;
+        }
     }
 }
