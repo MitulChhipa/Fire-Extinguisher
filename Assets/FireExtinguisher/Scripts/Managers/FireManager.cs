@@ -19,7 +19,6 @@ namespace FireExtinguisher.Manager
         private List<FirePoint> _burntFirePoints = new List<FirePoint>();
         private List<FirePoint> _extinguishedFirePoints = new List<FirePoint>();
 
-        [SerializeField] private FireExtinguisherSpawner _fireExtinguisherSpawner;
         [SerializeField] private GameObject _firePrefab;
         [SerializeField] private GameObject _firePoint;
 
@@ -31,6 +30,12 @@ namespace FireExtinguisher.Manager
         [Range(0f, 1f)]
         [SerializeField] private float _losingThreshold;
         private int _totalFirePoints;
+
+        [Range(1f, 60f)]
+        [SerializeField] private float _fireStartTime = 1f;
+        
+        [Range(1f, 5f)]
+        [SerializeField] private float _fireRepeatingTime = 2f;
 
         private void OnEnable()
         {
@@ -47,7 +52,7 @@ namespace FireExtinguisher.Manager
         {
             _sceneObjects = FindObjectsOfType<OVRSemanticClassification>();
             FetchFlamableObjects();
-            Invoke("SetFlamePoints", 1);
+            Invoke(nameof(SetFlamePoints), 1f);
         }
 
         private void FetchFlamableObjects()
@@ -90,15 +95,14 @@ namespace FireExtinguisher.Manager
 
 
             _totalFirePoints = _unlitFirePoints.Count;
-            _fireExtinguisherSpawner.SetFireExtinguisher();
 
-            InvokeRepeating("SetFireToPoints", 1, 1);
+            InvokeRepeating(nameof(SetFireToPoints), _fireStartTime, _fireRepeatingTime);
         }
 
         private void SetFireToPoints()
         {
             CheckWarningCondition();
-            
+
             if (_unlitFirePoints.Count == 0) { return; }
 
             if (_litFirePoints.Count == 0)
@@ -117,21 +121,6 @@ namespace FireExtinguisher.Manager
                 _litFirePoints.Add(currentFirePointToLit);
                 _unlitFirePoints.Remove(currentFirePointToLit);
             }
-        }
-        public float GetClosestFlamableDistance(Vector3 position)
-        {
-            float closestDistance = Vector3.Distance(position, _firePointGenerators[0].transform.position);
-
-            foreach (FirePointGenerator firePointGenerator in _firePointGenerators)
-            {
-                float currentPointDistance = Vector3.Distance(position, firePointGenerator.transform.position);
-
-                if (currentPointDistance < closestDistance)
-                {
-                    closestDistance = currentPointDistance;
-                }
-            }
-            return closestDistance;
         }
         private void FirePointBurnt(FirePoint firePoint)
         {
@@ -161,8 +150,8 @@ namespace FireExtinguisher.Manager
                 print("Won");
                 GameManager.OnWon?.Invoke();
             }
-        }   
-       
+        }
+
         private void CheckWarningCondition()
         {
             if ((_extinguishedFirePoints.Count < _litFirePoints.Count * _warningThreshold) && (_litFirePoints.Count > (_totalFirePoints * _warningThreshold)))

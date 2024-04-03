@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using FireExtinguisher.Utilities;
-
-
+using Unity.VisualScripting;
+using FireExtinguisher.Fire;
 
 namespace FireExtinguisher.Extinguisher
 {
@@ -15,28 +15,22 @@ namespace FireExtinguisher.Extinguisher
         [SerializeField] private FireManager _fireManager;
         private GameObject _fireExtinguisher;
         private OVRSemanticClassification[] _classification;
-        private List<FireExtinguisherPoint> _fireExtinguisherPoints = new List<FireExtinguisherPoint>();
+
+        private List<OVRSemanticClassification> _placableClassificationList = new List<OVRSemanticClassification>();
+        private List<OVRSemanticClassification> _nonPlacableClassificationList = new List<OVRSemanticClassification>();
+
         private float _zAxisSize;
         private bool _extinguisherInstantiated = false;
         private Rigidbody _fireExtinguisherRigidbody;
+
+        [SerializeField] private ProjectSettings projectSettings;
 
         public void SetFireExtinguisher()
         {
             if (!_extinguisherInstantiated)
             {
-                _classification = FindObjectsOfType<OVRSemanticClassification>().Where(c => c.Contains(SceneObjects.WALL_FACE.ToString())).ToArray();
-
-                if (_fireExtinguisherPoints.Count == 0)
-                {
-                    foreach (var classification in _classification)
-                    {
-                        FireExtinguisherPoint point = classification.GetComponent<FireExtinguisherPoint>();
-
-
-                        _fireExtinguisherPoints.Add(point);
-                    }
-                }
-
+                _classification = FindObjectsOfType<OVRSemanticClassification>();
+                FillOutPlacableAndNonPlacable();
 
                 _fireExtinguisher = Instantiate(_fireExtinguisherPrefab);
 
@@ -51,52 +45,77 @@ namespace FireExtinguisher.Extinguisher
                 _zAxisSize = bounds.size.z / 2;
 
             }
-            
+
             if (_fireExtinguisherRigidbody == null)
             {
                 _fireExtinguisherRigidbody = _fireExtinguisher.GetComponent<Rigidbody>();
             }
-            
+
             _fireExtinguisherRigidbody.isKinematic = true;
-            GetBestWallToPlace().PlaceFireExtinguisher(_fireExtinguisher.transform, _zAxisSize);
+            GetBestPlacableToPlace().GetComponent<FireExtinguisherPoint>().PlaceFireExtinguisher(_fireExtinguisher.transform, _zAxisSize);
             _extinguisherInstantiated = true;
         }
 
-        private FireExtinguisherPoint GetClosestWallToPlace(Vector3 position)
-        {
-            float closestDistance = Vector3.Distance(_fireExtinguisherPoints[0].transform.position, position);
-            FireExtinguisherPoint closestFireExtinguisherPoint = _fireExtinguisherPoints[0];
-
-            for (int i = 1; i < _fireExtinguisherPoints.Count; i++)
-            {
-                float currentDistance = Vector3.Distance(_fireExtinguisherPoints[i].transform.position, position);
-
-                if (currentDistance < closestDistance)
-                {
-                    closestDistance = currentDistance;
-                    closestFireExtinguisherPoint = _fireExtinguisherPoints[i];
-                }
-            }
-
-            return closestFireExtinguisherPoint;
-
-        }
-        private FireExtinguisherPoint GetBestWallToPlace()
+        private OVRSemanticClassification GetBestPlacableToPlace()
         {
             float farestDistance = 0;
-            FireExtinguisherPoint bestFireExtinguisherPoint = _fireExtinguisherPoints[0];
+            OVRSemanticClassification bestFireExtinguisherPoint = _placableClassificationList[0];
 
-            for (int i = 1; i < _fireExtinguisherPoints.Count; i++)
+            for (int i = 1; i < _placableClassificationList.Count; i++)
             {
-                float currentClosestFlamableDistance = _fireManager.GetClosestFlamableDistance(_fireExtinguisherPoints[i].transform.position);
+                float currentClosestFlamableDistance = GetClosestNonPlacableDistance(_placableClassificationList[i].transform.position);
                 if (currentClosestFlamableDistance > farestDistance)
                 {
                     farestDistance = currentClosestFlamableDistance;
-                    bestFireExtinguisherPoint = _fireExtinguisherPoints[i];
+                    bestFireExtinguisherPoint = _placableClassificationList[i];
                 }
             }
 
             return bestFireExtinguisherPoint;
+        }
+
+        private void FillOutPlacableAndNonPlacable()
+        {
+            string[] placableObjectNames = projectSettings.GetPlacableObjectsObjects();
+
+            for (int i = 0; i < _classification.Length; i++)
+            {
+                bool isPlacable = false;
+
+                for (int j = 0; j < placableObjectNames.Length; j++)
+                {
+                    if (_classification[i].Contains(placableObjectNames[j]))
+                    {
+                        isPlacable = true;
+                        break;
+                    }
+                }
+
+                if (isPlacable)
+                {
+                    _placableClassificationList.Add(_classification[i]);
+                }
+                else
+                {
+                    _nonPlacableClassificationList.Add(_classification[i]);
+                }
+            }
+        }
+
+        public float GetClosestNonPlacableDistance(Vector3 position)
+        {
+            float closestDistance = Vector3.Distance(position, _nonPlacableClassificationList[0].transform.position);
+
+            foreach (OVRSemanticClassification firePointGenerator in _nonPlacableClassificationList)
+            {
+                float currentPointDistance = Vector3.Distance(position, firePointGenerator.transform.position);
+
+                if (currentPointDistance < closestDistance)
+                {
+                    closestDistance = currentPointDistance;
+                }
+            }
+            return closestDistance;
         }
     }
 }

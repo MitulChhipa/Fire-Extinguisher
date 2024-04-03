@@ -11,6 +11,8 @@ namespace FireExtinguisher.Utilities
 
         [EnumFlagsAttribute]
         public SceneObjects flamableObjects;
+        [EnumFlagsAttribute]
+        public SceneObjects fireExtinguisherPlacement;
 
         #region PropertiesGetter
         public IEnumerable<string>[] GetFlamableObjectsEnumerable()
@@ -57,6 +59,52 @@ namespace FireExtinguisher.Utilities
             }
 
             return flamableObjectList;
+        }       
+        
+        public IEnumerable<string>[] GetPlacableObjectsEnumerable()
+        {
+            List<int> selectedElements = new List<int>();
+            for (int i = 0; i < System.Enum.GetValues(typeof(SceneObjects)).Length; i++)
+            {
+                int layer = 1 << i;
+                if (((int)fireExtinguisherPlacement & layer) != 0)
+                {
+                    selectedElements.Add(i);
+                }
+            }
+
+
+            IEnumerable<string>[] placableObjects = new IEnumerable<string>[selectedElements.Count];
+
+            for (int i = 0; i < selectedElements.Count; i++)
+            {
+                placableObjects[i] = new[] { ((SceneObjects)selectedElements[i]).ToString() };
+            }
+
+            return placableObjects;
+        }
+
+        public string[] GetPlacableObjectsObjects()
+        {
+            List<int> selectedElements = new List<int>();
+            for (int i = 0; i < System.Enum.GetValues(typeof(SceneObjects)).Length; i++)
+            {
+                int layer = 1 << i;
+                if (((int)fireExtinguisherPlacement & layer) != 0)
+                {
+                    selectedElements.Add(i);
+                }
+            }
+
+
+            string[] placableObjects = new string[selectedElements.Count];
+
+            for (int i = 0; i < selectedElements.Count; i++)
+            {
+                placableObjects[i] = ((SceneObjects)selectedElements[i]).ToString();
+            }
+
+            return placableObjects;
         }
         #endregion
     }

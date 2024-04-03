@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ProjectSettings
   m_EditorClassIdentifier: 
   version: 0.04
-  flamableObjects: 32704
+  flamableObjects: 32710
+  fireExtinguisherPlacement: 1
