@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace FireExtinguisher.Attributes
+namespace FireExtinguisher.Utilities
 {
     public class EnumFlagsAttribute : PropertyAttribute
     {

@@ -11,7 +11,6 @@ namespace FireExtinguisher.Extinguisher
     public class FireExtinguisherSpawner : MonoBehaviour
     {
         [SerializeField] private GameObject _fireExtinguisherPrefab;
-        [SerializeField] private Transform _parent;
         [SerializeField] private FireManager _fireManager;
         private GameObject _fireExtinguisher;
         private OVRSemanticClassification[] _classification;
