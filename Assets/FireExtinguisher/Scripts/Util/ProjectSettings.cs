@@ -1,5 +1,4 @@
 using UnityEngine;
-using FireExtinguisher.Attributes;
 using System.Collections.Generic;
 
 namespace FireExtinguisher.Utilities
